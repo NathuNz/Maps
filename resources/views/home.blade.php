@@ -19,16 +19,15 @@
     <div id="map"></div>
 </body>
 <script>
+    //memunculkan map leaflet
     var map = L.map('map').setView([-1.269160, 116.825264], 6);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
 
-    fetch("/geojson/provinces/32.geojson") 
-    .then(res => res.json())
-    .then(data => {
-        L.geoJson(data).addTo(map);
-    });
+    @foreach($geojsonData as $geojson)
+            L.geoJson(@json($geojson)).addTo(map);
+        @endforeach
 </script>
 </html>

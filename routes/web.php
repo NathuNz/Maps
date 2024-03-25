@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Support\Facades\File;
+use App\Http\Controllers\GeoJSONLoader;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,12 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('home');
-});
+Route::get('/', [GeoJSONLoader::class, 'loader']);
 
-Route::get('/geojson/provinces', function () {
-    $path = public_path('geojson/provinces/32.geojson');
-    $contents = File::get($path);
-    return $contents;
-});
+// Route::get('/maps', [GeoJSONLoader::class, 'loader']);

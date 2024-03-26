@@ -26,8 +26,20 @@
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
 
-    @foreach($geojsonData as $geojson)
-            L.geoJson(@json($geojson)).addTo(map);
-        @endforeach
+    var colorMapping = @json($colorMapping);
+
+@foreach($geojsonData as $geojson)
+    var geojsonLayer = L.geoJson(@json($geojson['data'])).addTo(map);
+    
+    // Check if color mapping exists for the filename
+    if (colorMapping.hasOwnProperty(@json($geojson['filename']))) {
+        var color = colorMapping[@json($geojson['filename'])];
+        // Set color of the GeoJSON layer
+        geojsonLayer.setStyle({
+            fillColor: color,
+            color: color
+        });
+    }
+@endforeach
 </script>
 </html>

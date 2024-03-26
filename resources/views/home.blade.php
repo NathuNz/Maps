@@ -26,20 +26,40 @@
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
 
-    var colorMapping = @json($colorMapping);
+   // Define GeoJSON data with multiple properties
+   var geojsonData = @json($geojsonData);
 
-@foreach($geojsonData as $geojson)
-    var geojsonLayer = L.geoJson(@json($geojson['data'])).addTo(map);
-    
-    // Check if color mapping exists for the filename
-    if (colorMapping.hasOwnProperty(@json($geojson['filename']))) {
-        var color = colorMapping[@json($geojson['filename'])];
-        // Set color of the GeoJSON layer
-        geojsonLayer.setStyle({
-            fillColor: color,
-            color: color
-        });
-    }
-@endforeach
+// Define color mapping based on prov_id
+var colorMapping = @json($colorMapping);
+
+// Create a GeoJSON layer with style
+geojsonData.forEach(function (data) {
+    var geojsonLayer = L.geoJSON(data.data, {
+        style: function (feature) {
+            var prov_id = feature.properties.prov_id;
+
+            // Check if color mapping exists for the prov_id
+            if (colorMapping.hasOwnProperty(prov_id)) {
+                return {
+                    fillColor: colorMapping[prov_id],
+                    weight: 2,
+                    opacity: 1,
+                    color: 'white',
+                    fillOpacity: 0.7
+                };
+            } else {
+                // Default style
+                return {
+                    fillColor: 'gray',
+                    weight: 2,
+                    opacity: 1,
+                    color: 'white',
+                    fillOpacity: 0.7
+                };
+            }
+        }
+    }).addTo(map);
+});
+
 </script>
 </html>
